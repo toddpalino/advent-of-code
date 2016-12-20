@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-from collections import deque
-
 blacklist = []
 with open('addresses') as f:
     for line in f:
