@@ -30,10 +30,12 @@ for i in range(remaining / 2):
 while remaining > 1:
     turn.presents += target.presents
 
-    # The target moves one spot if the number of elves is even, two if off (before removal)
+    # The target moves one spot if the number of elves is even, two if odd (before removal)
     next_target = target.left
     if remaining % 2 == 1:
         next_target = next_target.left
+
+    # Remove the target from the circle
     target.left.right, target.right.left = target.right, target.left
     target = next_target
 
