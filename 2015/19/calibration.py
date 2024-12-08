@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 replacements = []
 with open('replacements') as f:
@@ -15,4 +15,4 @@ for src, target in replacements:
         newstr = src.join(segments[0:i]) + target + src.join(segments[i:])
         transforms[newstr] = True
 
-print "TRANSFORMS: {0}".format(len(transforms))
+print("TRANSFORMS: {0}".format(len(transforms)))
