@@ -28,11 +28,10 @@ for y in range(len_y):
 antinodes = set()
 for freq, locs in antennas.items():
 	for p1, p2 in permutations(locs, 2):
-		x_off = p1[0] - p2[0]
-		y_off = p1[1] - p2[1]
-		for point in ((p1[0] + x_off, p1[1] + y_off), (p2[0] - x_off, p2[1] - y_off)):
-			if (0 <= point[0] < len_x) and (0 <= point[1] < len_y):
-				antinodes.add(point)
+		x = p1[0] + (p1[0] - p2[0])
+		y = p1[1] + (p1[1] - p2[1])
+		if (0 <= x < len_x) and (0 <= y < len_y):
+			antinodes.add((x, y))
 
 print("Unique antinodes: %d" % (len(antinodes)))
 
