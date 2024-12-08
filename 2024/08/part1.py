@@ -28,29 +28,9 @@ for y in range(len_y):
 antinodes = set()
 for freq, locs in antennas.items():
 	for p1, p2 in permutations(locs, 2):
-		x_dist = abs(p1[0] - p2[0])
-		y_dist = abs(p1[1] - p2[1])
-		candidates1 = set([
-			(p1[0] + x_dist, p1[1] + y_dist),
-			(p1[0] + x_dist, p1[1] - y_dist),
-			(p1[0] - x_dist, p1[1] + y_dist),
-			(p1[0] - x_dist, p1[1] - y_dist),
-			(p1[0] + 2*x_dist, p1[1] + 2*y_dist),
-			(p1[0] + 2*x_dist, p1[1] - 2*y_dist),
-			(p1[0] - 2*x_dist, p1[1] + 2*y_dist),
-			(p1[0] - 2*x_dist, p1[1] - 2*y_dist),
-		])
-		candidates2 = set([
-			(p2[0] + x_dist, p2[1] + y_dist),
-			(p2[0] + x_dist, p2[1] - y_dist),
-			(p2[0] - x_dist, p2[1] + y_dist),
-			(p2[0] - x_dist, p2[1] - y_dist),
-			(p2[0] + 2*x_dist, p2[1] + 2*y_dist),
-			(p2[0] + 2*x_dist, p2[1] - 2*y_dist),
-			(p2[0] - 2*x_dist, p2[1] + 2*y_dist),
-			(p2[0] - 2*x_dist, p2[1] - 2*y_dist),
-		])
-		for point in candidates1 & candidates2:
+		x_off = p1[0] - p2[0]
+		y_off = p1[1] - p2[1]
+		for point in ((p1[0] + x_off, p1[1] + y_off), (p2[0] - x_off, p2[1] - y_off)):
 			if (0 <= point[0] < len_x) and (0 <= point[1] < len_y):
 				antinodes.add(point)
 
