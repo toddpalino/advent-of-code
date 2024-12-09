@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+from copy import copy
+
 class Spell:
 	mana_cost = 0
 
@@ -46,8 +48,6 @@ class Effect(Spell):
 
 	def do(self):
 		self.turns -= 1
-		if self.turns == 0:
-			self.game.effects.remove(self)
 
 
 class Shield(Effect):
@@ -89,43 +89,56 @@ class Game:
 		self.effects = []
 		self.mana_spent = 0
 		self.hard = hard
-		self.turns = 0
+		self.history = []
 
 	def copy(self):
 		new_game = Game(self.boss_hp, self.boss_damage, self.player_hp, self.player_mana, hard=self.hard)
 		new_game.player_armor = self.player_armor
 		new_game.mana_spent = self.mana_spent
-		new_game.turns = self.turns
+		new_game.history = copy(self.history)
 		for effect in self.effects:
 			new_game.effects.append(effect.copy(new_game))
 		return new_game
 
 	def can_cast(self, spell):
-		if spell.mana_cost > self.player_mana:
+		base_mana = self.player_mana
+
+		# Check effects first to see if we already have one of these
+		for effect in self.effects:
+			if effect.__class__ == spell and (not effect.is_expiring()):
+				return False
+
+			# If a recharge is active, we're going to get more mana before we cast
+			if effect.__class__ == Recharge:
+				base_mana += 101
+		if spell.mana_cost > base_mana:
 			return False
-		if issubclass(spell, Effect):
-			for effect in self.effects:
-				if effect.__class__ == spell and (not effect.is_expiring()):
-					return False
 		return True
 
+	def execute_effects(self):
+		# We have to do this in two steps, or we trip up on modifying an array we're iterating
+		for effect in self.effects:
+			effect.do()
+		for effect in list(self.effects):
+			if effect.turns <= 0:
+				self.effects.remove(effect)
+
 	def turn(self, spell):
-		self.turns += 1
 		if self.hard:
 			self.player_hp -= 1
-			if self.is_over():
-				return
+
+		if self.is_over():
+			return
 
 		# Player's turn first
 		# Execute effects
-		for effect in self.effects:
-			effect.do()
-
+		self.execute_effects()
 		if self.is_over():
 			return
 
 		# Cast player's spell
 		cast_spell = spell(self)
+		self.history.append(spell.__name__)
 		if issubclass(spell, Effect):
 			self.effects.append(cast_spell)
 
@@ -134,9 +147,7 @@ class Game:
 
 		# Boss's turn next
 		# Execute effects
-		for effect in self.effects:
-			effect.do()
-
+		self.execute_effects()
 		if self.is_over():
 			return
 
