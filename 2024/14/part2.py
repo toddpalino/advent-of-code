@@ -1,7 +1,8 @@
-#!/usr/bin/python3
+#!/opt/homebrew/bin/python3
 
 import re
 import time
+from itertools import batched
 from math import prod
 from bots import chunk_list, position_at_tick, print_bots
 
@@ -14,7 +15,7 @@ ticks = 100
 start_time = time.time()
 
 with open(fn, 'r') as f:
-	bots = list(chunk_list([int(n) for n in re.findall(r'-?\d+', f.read())], 4))
+	bots = list(batched([int(n) for n in re.findall(r'-?\d+', f.read())], n=4, strict=True))
 
 # What we are supposed to do for part 2 is very unclear - we're supposed to have the bots
 # draw something, but we don't really know what except for "a christmas tree". But if
