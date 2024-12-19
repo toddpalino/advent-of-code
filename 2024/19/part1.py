@@ -14,6 +14,15 @@ def is_pattern_possible(pattern):
 			return True
 	return False
 
+@cache
+def possible_designs(pattern):
+	if len(pattern) == 0:
+		return 1
+
+	# Find all patterns that are a prefix for this pattern
+	prefixes = [towel for towel in towels if pattern.startswith(towel)]
+	return sum(possible_designs(pattern[len(prefix):]) for prefix in prefixes)
+
 #fn = "test.txt"
 fn = "input.txt"
 
@@ -24,8 +33,15 @@ with open(fn, 'r') as f:
 	towels = lines[0].split(', ')
 	patterns = lines[2:]
 
-count = sum(is_pattern_possible(pattern) for pattern in patterns)
-print(f"Patterns that can be created: {count}")
+valid_patterns = [pattern for pattern in patterns if is_pattern_possible(pattern)]
+print(f"Patterns that can be created: {len(valid_patterns)}")
+
+p1_time = time.time()
+print("Part 1 time: %f" % (p1_time - start_time))
+print()
+
+count = sum(possible_designs(pattern) for pattern in valid_patterns)
+print(f"Possible Designs: {count}")
 
 end_time = time.time()
-print("Elapsed time: %f" % (end_time - start_time))
+print("Part 2 time: %f" % (end_time - p1_time))
