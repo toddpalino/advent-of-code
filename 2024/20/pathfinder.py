@@ -30,7 +30,7 @@ class PathFinder:
 	def __init__(self, grid, start, func_choices_at=None):
 		self._grid = grid
 		self._start = start
-		self._scores = {self._start: 0}
+		self.scores = {self._start: 0}
 		self._prev = {}
 		self._run_complete = False
 
@@ -55,8 +55,8 @@ class PathFinder:
 					continue
 
 				next_cost = score + 1
-				if next_item not in self._scores or next_cost < self._scores[next_item]:
-					self._scores[next_item] = next_cost
+				if next_item not in self.scores or next_cost < self.scores[next_item]:
+					self.scores[next_item] = next_cost
 					self._prev[next_item] = item
 				queue.add(next_item, next_cost)
 		self._run_complete = True
@@ -64,7 +64,7 @@ class PathFinder:
 	def get_score(self, end):
 		if not self._run_complete:
 			self.run()
-		return self._scores[end] if end in self._scores else None
+		return self.scores[end] if end in self.scores else None
 
 	def get_path(self, end):
 		if not self._run_complete:

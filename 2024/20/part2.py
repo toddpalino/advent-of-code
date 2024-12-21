@@ -1,8 +1,17 @@
 #!/usr/bin/env python
 
 import time
-from itertools import combinations
 from pathfinder import find_location, PathFinder
+
+def points_within_distance(x, y, r):
+	for dist in range(2, r + 1):
+		for offset in range(dist):
+			inverse_offset = dist - offset # Inverse offset
+			yield (x + offset, y + inverse_offset), dist
+			yield (x + inverse_offset, y - offset), dist
+			yield (x - offset, y - inverse_offset), dist
+			yield (x - inverse_offset, y + offset), dist
+
 
 #fn = "test.txt"
 fn = "input.txt"
@@ -18,18 +27,21 @@ end = find_location(grid, 'E')
 pf = PathFinder(grid, start)
 pf.run()
 
-# Find all possible cheat locations and calculate the savings
+# Find all possible cheat locations and count them if the savings is less than 100
 # Savings for a cheat is the difference between the scores on either side minus the length of the cheat
-path = pf.get_path(end)
 num_cheats = 0
 max_cheat = 20
 min_savings = 100
-for p1, p2 in combinations(path, 2):
-	md = abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
-	if md > max_cheat or (abs(pf.get_score(p1) - pf.get_score(p2)) - md) < min_savings:
-		# Cheat path must be less than 20 and save at least min_savings
-		continue
-	num_cheats += 1
+
+path = pf.get_path(end)
+scores = pf.scores
+remaining = set(path)
+for p1 in path:
+	remaining.remove(p1)
+	for p2, md in points_within_distance(*p1, max_cheat):
+		if p2 in remaining and (scores[p2] - scores[p1] - md >= min_savings):
+			# Cheat path must be less than 20 and save at least min_savings
+			num_cheats += 1
 
 # Sum up all the cheats that save at least 100
 print(f"Number of cheats that save at least {min_savings}: {num_cheats}")
