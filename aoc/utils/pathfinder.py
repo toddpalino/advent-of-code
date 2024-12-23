@@ -1,7 +1,7 @@
 # This is a generic implementation of Dijkstra's shortest path algorithm. It provides for both scoring and
 # path determination, and lets me plug in logic for determining what directions are available. We're going
 # to start basic and add functionality later as we need it
-from collections import deque
+
 from itertools import product
 from aoc.utils.priorityq import PriorityQueue
 
@@ -16,7 +16,7 @@ def find_location(grid, letter, replace='.'):
 			return x, y
 
 # Most of the time, our grids have '.' as a valid path and '#' as a wall. This provides an iterator
-# that will yield those choices
+# that will yield those choices along with the score to add for moving to each one
 def _choices_at(grid, item, letter='.'):
 	x, y = item
 	for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
@@ -24,7 +24,7 @@ def _choices_at(grid, item, letter='.'):
 			continue
 		if grid[ny][nx] != '.':
 			continue
-		yield nx, ny
+		yield (nx, ny), 1
 
 class PathFinder:
 	def __init__(self, grid, start, func_choices_at=None):
@@ -50,15 +50,15 @@ class PathFinder:
 			visited.add(item)
 
 			# Find blocks we can move to
-			for next_item in self._choices_at(grid=self._grid, item=item):
+			for next_item, next_score in self._choices_at(grid=self._grid, item=item):
 				if next_item in visited:
 					continue
 
-				next_cost = score + 1
-				if next_item not in self.scores or next_cost < self.scores[next_item]:
-					self.scores[next_item] = next_cost
+				next_score += score
+				if next_item not in self.scores or next_score < self.scores[next_item]:
+					self.scores[next_item] = next_score
 					self._prev[next_item] = item
-				queue.add(next_item, next_cost)
+				queue.add(next_item, next_score)
 		self._run_complete = True
 
 	def get_score(self, end):
