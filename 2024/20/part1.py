@@ -3,7 +3,7 @@
 import time
 from collections import Counter
 from itertools import product
-from pathfinder import find_location, PathFinder
+from aoc.utils.pathfinder import find_location, PathFinder
 
 #fn = "test.txt"
 fn = "input.txt"

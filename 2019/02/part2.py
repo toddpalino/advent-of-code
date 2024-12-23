@@ -2,25 +2,23 @@
 
 import time
 from itertools import product
-from intcode import execute
+from aoc.utils.intcode import Intcode, read_intcode_from_file
 
 #fn = "test.txt"
 fn = "input.txt"
 
 start_time = time.time()
 
-with open(fn, 'r') as f:
-	nums = [int(x) for x in f.read().strip().split(',')]
-
 target = 19690720
+intcode = Intcode(read_intcode_from_file(fn))
 
 for noun, verb in product(range(100), repeat=2):
-	mem = nums.copy()
-	mem[1] = noun
-	mem[2] = verb
+	intcode.reset()
+	intcode._mem[1] = noun
+	intcode._mem[2] = verb
 
-	mem = execute(mem)
-	if mem[0] == target:
+	intcode.run()
+	if intcode._mem[0] == target:
 		print("n=%d v=%d: %d" % (noun, verb, 100 * noun + verb))
 		break
 

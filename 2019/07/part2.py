@@ -2,7 +2,7 @@
 
 import time
 from itertools import permutations
-from intcode2 import Intcode
+from aoc.utils.intcode import Intcode, read_intcode_from_file
 
 def determine_sequence(program):
 	amps = [Intcode(program.copy(), pause_on_output=True) for _ in range(5)]
@@ -50,10 +50,7 @@ for i, test in enumerate(tests):
 		continue
 	print(f'Test {i} passed')
 
-with open('input.txt', 'r') as f:
-	mem = [int(x) for x in f.read().strip().split(',')]
-
-sequence, signal = determine_sequence(mem)
+sequence, signal = determine_sequence(read_intcode_from_file("input.txt"))
 print(f'Maximum signal: {signal} (sequence {sequence})')
 
 end_time = time.time()

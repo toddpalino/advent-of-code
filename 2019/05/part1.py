@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
 import time
-from intcode2 import execute
-
-fn = "input.txt"
+from aoc.utils.intcode import Intcode, read_intcode_from_file
 
 start_time = time.time()
 
@@ -13,20 +11,20 @@ tests = [
 ]
 
 for i, test in enumerate(tests):
-	mem = test['mem']
-	outputs = execute(mem)
+	intcode = Intcode(test['mem'])
+	intcode.run()
+	outputs = intcode.get_output()
 	if outputs != test['outputs']:
 		print(f'Test {i} failed (outputs expected {test["outputs"]}, got {outputs})')
 		break
-	if mem[test['position']] != test['value']:
-		print(f'Test {i} failed (position {test["position"]} expected {test['value']}, got {mem[test["position"]]})')
+	if intcode._mem[test['position']] != test['value']:
+		print(f'Test {i} failed (position {test["position"]} expected {test['value']}, got {intcode._mem[test["position"]]})')
 		break
 	print(f'Test {i} passed')
 
-with open(fn, 'r') as f:
-	nums = [int(x) for x in f.read().strip().split(',')]
-
-outputs = execute(nums, inputs=[1])
+intcode = Intcode(read_intcode_from_file("input.txt"), inputs=[1])
+intcode.run()
+outputs = intcode.get_output()
 print(f'Output: {outputs}')
 
 end_time = time.time()

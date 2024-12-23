@@ -3,7 +3,7 @@
 # to start basic and add functionality later as we need it
 from collections import deque
 from itertools import product
-from priorityq import PriorityQueue
+from aoc.utils.priorityq import PriorityQueue
 
 # This is a common helper function to find locations on a grid. By default, it will replace
 # the location, once found, with a '.'. replace can be set to None for no replacement, or

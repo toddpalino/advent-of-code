@@ -1,5 +1,4 @@
-from collections import deque
-from priorityq import PriorityQueue
+from aoc.utils.priorityq import PriorityQueue
 
 
 class Orbit:

@@ -1,6 +1,6 @@
 import re
 from itertools import batched
-from priorityq import PriorityQueue
+from aoc.utils.priorityq import PriorityQueue
 
 def add_bytes(grid, byte_list):
 	for x, y in byte_list:

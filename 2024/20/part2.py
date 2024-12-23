@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import time
-from pathfinder import find_location, PathFinder
+from aoc.utils.pathfinder import find_location, PathFinder
 
 def points_within_distance(x, y, r):
 	for dist in range(2, r + 1):

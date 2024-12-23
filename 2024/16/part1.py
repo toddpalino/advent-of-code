@@ -4,7 +4,7 @@ import re
 import time
 from collections import deque
 from itertools import product
-from priorityq import PriorityQueue
+from aoc.utils.priorityq import PriorityQueue
 
 clockwise = {(1, 0): (0, 1), (-1, 0): (0, -1), (0, 1): (-1, 0), (0, -1): (1, 0)}
 counterclockwise = {(1, 0): (0, -1), (-1, 0): (0, 1), (0, 1): (1, 0), (0, -1): (-1, 0)}

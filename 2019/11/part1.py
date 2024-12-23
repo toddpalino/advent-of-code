@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import time
-from intcode import Intcode, read_intcode_from_file
+from aoc.utils.intcode import Intcode, read_intcode_from_file
 
 # Vectors - we will use an index to this. Left turn is -1, right turn is +1. Always mod 4. Start up
 vectors = [(0, -1), (1, 0), (0, 1), (-1, 0)]

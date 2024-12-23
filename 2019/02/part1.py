@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import time
-from intcode import execute
+from aoc.utils.intcode import Intcode
 
 #fn = "test.txt"
 fn = "input.txt"
@@ -15,8 +15,9 @@ with open(fn, 'r') as f:
 nums[1] = 12
 nums[2] = 2
 
-nums = execute(nums)
-print("Value at position 0: %d" % (nums[0]))
+intcode = Intcode(nums)
+intcode.run()
+print("Value at position 0: %d" % (intcode._mem[0]))
 
 end_time = time.time()
 print("Elapsed time: %f" % (end_time - start_time))

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import time
-from intcode import Intcode
+from aoc.utils.intcode import Intcode, read_intcode_from_file
 
 start_time = time.time()
 
@@ -20,10 +20,7 @@ for i, test in enumerate(tests):
 		continue
 	print(f'Test {i} passed')
 
-with open('input.txt', 'r') as f:
-	mem = [int(x) for x in f.read().strip().split(',')]
-
-intcode = Intcode(mem, inputs=[1])
+intcode = Intcode(read_intcode_from_file('input.txt'), inputs=[1])
 intcode.run()
 outputs = intcode.get_output()
 
