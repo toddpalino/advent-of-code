@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
 import time
-from itertools import product
-from priorityq import PriorityQueue
+from aoc.utils.priorityq import PriorityQueue
 
 # Test input
 #cave_depth = 510
