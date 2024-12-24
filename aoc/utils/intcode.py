@@ -10,9 +10,10 @@ def read_intcode_from_file(filename):
 		return [int(x) for x in f.read().strip().split(',')]
 
 class Intcode:
-	def __init__(self, program, inputs=None, pause_on_output=False):
+	def __init__(self, program, inputs=None, pause_on_output=False, pause_for_input=False):
 		self._original_mem = program.copy()
 		self._pause_on_output = pause_on_output
+		self._pause_for_input = pause_for_input
 		self._inputs = [] if inputs is None else inputs
 
 		self._mem = defaultdict(int)
@@ -25,7 +26,10 @@ class Intcode:
 		self._state = NOT_STARTED
 
 	def add_input(self, value):
-		self._inputs.append(value)
+		if isinstance(value, list):
+			self._inputs.extend(value)
+		else:
+			self._inputs.append(value)
 
 	def get_output(self):
 		rv = self._outputs
@@ -47,6 +51,12 @@ class Intcode:
 
 	def is_halted(self):
 		return self._state == HALTED
+
+	def set_memory_location(self, location, value):
+		self._mem[location] = value
+
+	def read_memory_location(self, location):
+		return self._mem[location]
 
 	def _read_opcode(self):
 		opcode = self._mem[self._ip]
@@ -105,6 +115,11 @@ class Intcode:
 				p3 = self._get_write_parameter(parameter_modes)
 				self._mem[p3] = p1 * p2
 			elif opcode == 3:
+				if self._pause_for_input and len(self._inputs) == 0:
+					# Back the IP up one (to point at the opcode) and exit
+					self._ip -= 1
+					self._state = PAUSED
+					return
 				# Input
 				p1 = self._get_write_parameter(parameter_modes)
 				self._mem[p1] = self._inputs.pop(0)
