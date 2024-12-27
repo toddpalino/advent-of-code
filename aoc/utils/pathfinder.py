@@ -17,7 +17,7 @@ def find_location(grid, letter, replace='.'):
 
 # Most of the time, our grids have '.' as a valid path and '#' as a wall. This provides an iterator
 # that will yield those choices along with the score to add for moving to each one
-def _choices_at(grid, item, letter='.'):
+def _choices_at(grid, item):
 	x, y = item
 	for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
 		if not ((0 <= nx < len(grid[0])) and (0 <= ny < len(grid))):
